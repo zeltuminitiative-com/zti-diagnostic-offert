@@ -116,6 +116,9 @@ window.ZTI = (() => {
       const d = Object.fromEntries(new FormData(f)); d.parcs = $$('[name="parcs"]:checked', f).map(c => c.value).join(', ');
       d.problemes = $$('[name="problemes"]:checked', f).map(c => c.value).join(', ') || 'Non précisé'; d.origine = 'Site / tunnel en ligne'; delete d.site; d.date = new Date().toLocaleString('fr-FR');
       if (window.ZTI.endpoint) { try { await fetch(window.ZTI.endpoint, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) }); } catch (_) {} }
+      // pixel Meta : événement « Lead » seulement après une demande valide (aucune donnée personnelle transmise)
+      const parcs = d.parcs.split(', ').filter(Boolean);
+      if (window.fbq) fbq('track', 'Lead', { content_name: 'Diagnostic scolaire offert', content_category: parcs.length > 1 ? 'Les deux' : (parcs[0] || 'Salle TIC') });
       done(d, root);
     });
     // position de l'établissement (facultatif) : lien Google Maps ajouté à la demande
