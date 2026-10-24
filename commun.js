@@ -134,11 +134,19 @@ window.ZTI = (() => {
   // récapitulatif mis en forme : version WhatsApp (*gras*, repères visuels) et version texte (e-mail, page)
   const maj1 = s => (s || '').trim().replace(/^\p{L}/u, c => c.toUpperCase());                                  // « émana » → « Émana »
   const mots = s => (s || '').trim().toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (m, a, c) => a + c.toUpperCase()); // « jean-paul » → « Jean-Paul »
+  // nom de l'établissement : sigles en capitales, mots principaux avec majuscule (« gs blaise » → « GS Blaise », « lycée d'emana » → « Lycée d'Emana »)
+  const SIGLES = /^(gs|gsb|cs|csb|lb|lt|ces|ceg|cetic|em|ep|epb|ens|enieg|eniet)$/i, PETITS = /^(de|du|des|et|à|au|aux|en|sur)$/i;
+  const nomEtab = s => (s || '').trim().replace(/\s+/g, ' ').split(' ').map((w, i, t) => {
+    if (SIGLES.test(w.replace(/\./g, ''))) return w.toUpperCase();
+    if (w === w.toUpperCase()) return w;                                  // déjà en capitales : on respecte la saisie
+    if (i > 0 && (PETITS.test(w) || (/^(le|la|les)$/i.test(w) && PETITS.test(t[i - 1])))) return w.toLowerCase();   // « de la Retraite », mais « Les Anges »
+    return w.replace(/(^|-)([dl]')?(\p{L})/giu, (m, h, a, c) => h + (a || '').toLowerCase() + c.toUpperCase());     // « ngoa-ekelle » → « Ngoa-Ekelle »
+  }).join(' ');
   const telFmt = t => '+237 ' + (t || '').replace(/[^\d]/g, '').replace(/^237/, '').replace(/^(\d)(\d{2})(\d{2})(\d{2})(\d{2})$/, '$1$2 $3 $4 $5');
   const FEM = { Fondateur: 'Fondatrice', Promoteur: 'Promotrice', Directeur: 'Directrice', Principal: 'Principale', Proviseur: 'Proviseure' };   // fonction accordée avec Mme / Mlle
   function infos(d) {
     const sans = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-    return { etab: maj1(d.etab), type: sans(d.etab).includes(sans(d.type)) ? '' : d.type,   // « Lycée de Nkol » + Lycée : pas de « (Lycée) » en double
+    return { etab: nomEtab(d.etab), type: sans(d.etab).includes(sans(d.type)) ? '' : d.type,   // « Lycée de Nkol » + Lycée : pas de « (Lycée) » en double
       parcs: d.parcs, postes: d.postes,
       lieu: [maj1(d.quartier), maj1(d.repere)].filter(Boolean).join(', ') + ' — ' + (d.ville || 'Yaoundé'), position: d.position,
       qui: [d.civilite, (d.nom || '').trim().toUpperCase(), mots(d.prenom)].filter(Boolean).join(' '), fonction: /^M(me|lle)$/.test(d.civilite) ? (FEM[d.fonction] || d.fonction) : d.fonction,
@@ -168,7 +176,7 @@ window.ZTI = (() => {
     const txt = recap(d);
     $('[data-recap]', box).textContent = txt;
     $('[data-wa]', box).href = `https://wa.me/${WA}?text=${encodeURIComponent(recapWA(d))}`;
-    $('[data-mail]', box).href = `mailto:${MAIL}?subject=${encodeURIComponent('Diagnostic scolaire offert — ' + maj1(d.etab))}&body=${encodeURIComponent(txt)}`;
+    $('[data-mail]', box).href = `mailto:${MAIL}?subject=${encodeURIComponent('Diagnostic scolaire offert — ' + nomEtab(d.etab))}&body=${encodeURIComponent(txt)}`;
     $('form[data-zti]', root).hidden = true; box.hidden = false; box.scrollIntoView({ behavior: 'smooth', block: 'start' });
     $$('[data-dot]', root).forEach(x => x.classList.add('on'));
   }

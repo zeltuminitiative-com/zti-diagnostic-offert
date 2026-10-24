@@ -435,7 +435,28 @@ footer .btn.fleche { white-space: nowrap; font-family: Poppins, system-ui, sans-
   background: #02008A; color: #E7ECFA; box-shadow: inset 0 0 0 2px #E7ECFA; transition: background-color .18s ease, color .18s ease, transform .18s ease; }
 footer .btn.fleche svg { width: 36px; height: 36px; padding: 9px; border-radius: 50%; background: #E7ECFA; color: #02008A; transition: transform .18s ease, background-color .18s ease, color .18s ease; }
 footer .btn.fleche:hover, footer .btn.fleche:focus-visible { background: #E7ECFA; color: #02008A; transform: translateY(-2px); }
-footer .btn.fleche:hover svg, footer .btn.fleche:focus-visible svg { background: #02008A; color: #FFFFFF; transform: translateX(4px); }</style>
+footer .btn.fleche:hover svg, footer .btn.fleche:focus-visible svg { background: #02008A; color: #FFFFFF; transform: translateX(4px); }
+/* ——— téléphone et tablette : corrections d'affichage (la mise en page ordinateur n'est pas modifiée) ———
+   1. en-tête : la ligne du logo tient dans la largeur du téléphone
+   2. héro : la phrase du bas suit le contenu au lieu de le chevaucher
+   3. héro : le bloc blanc du titre, sur deux lignes, apparaît en fondu (le dévoilement latéral masquait la 2e ligne) */
+@media (max-width: 900px) {
+  .hero-pied { position: relative; bottom: auto; left: auto; right: auto; padding: 0; margin-top: 34px; }
+  .hero h1 .hl { animation: hfade .7s 1.1s both; }
+  .hero h1 { line-height: 1.12; }
+}
+@media (max-width: 560px) {
+  .top img { height: 34px; }
+  .marque { gap: 8px; } .marque .dep { font-size: 11px; padding-left: 8px; letter-spacing: .02em; }
+}/* téléphone : démonstration « Protection ZTi » assez haute pour son contenu ; pied de page sur une colonne, centré */
+@media (max-width: 560px) {
+  .demo { aspect-ratio: auto; min-height: 330px; }
+  .demo .threat { font-size: 18px; } .demo .ok { font-size: 20px; } .demo .chip { font-size: 13px; }
+  footer .w.pied { grid-template-columns: 1fr; justify-content: stretch; justify-items: center; text-align: center; gap: 34px; }
+  footer .pied-contact { justify-self: stretch; } footer .rs.contact { min-width: 0; text-align: left; }
+  footer .pied-col h4 { text-align: center; }
+  footer .copy .w { justify-content: center; text-align: center; }
+}@media (max-width: 900px) { footer .w.pied { padding: 0 20px; } }   /* tablette et téléphone : marges du pied de page */</style>
 <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -652,7 +673,7 @@ src="https://www.facebook.com/tr?id=2658127501297829&ev=PageView&noscript=1"
         <div class="row2"><div class="fld"><label>Quartier</label><input name="quartier" required data-check="texte"><span class="e">Indiquez le nom du quartier.</span></div>
           <div class="fld"><label>Repère</label><input name="repere" placeholder="Ex. : face à la pharmacie…" required data-check="texte"><span class="e">Indiquez un repère réel pour trouver l'établissement.</span></div></div>
         <div class="fld"><label>Ville</label><select name="ville"><option>Yaoundé</option><option>Hors de Yaoundé</option></select></div>
-        <div class="fld geo"><button type="button" class="btn ghost" data-geo>📍 Partager la position de l'établissement</button><span class="gok" data-geook></span><input type="hidden" name="position"></div>
+        <div class="fld geo"><button type="button" class="btn ghost" data-geo><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" style="vertical-align:-3px;margin-right:6px"><path d="M12 2a7 7 0 0 0-7 7c0 5.3 7 13 7 13s7-7.7 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>Partager la position de l'établissement</button><span class="gok" data-geook></span><input type="hidden" name="position"></div>
         <div class="nav"><span></span><button type="button" class="btn" data-next>Continuer →</button></div>
       </div>
       <div data-step hidden>
