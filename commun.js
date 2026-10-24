@@ -138,7 +138,8 @@ window.ZTI = (() => {
   const FEM = { Fondateur: 'Fondatrice', Promoteur: 'Promotrice', Directeur: 'Directrice', Principal: 'Principale', Proviseur: 'Proviseure' };   // fonction accordée avec Mme / Mlle
   function infos(d) {
     const sans = s => (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-    return { etab: maj1(d.etab), type: sans(d.etab).includes(sans(d.type)) ? '' : d.type,   // « Lycée de Nkol » + Lycée : pas de « (Lycée) » en double parcs: d.parcs, postes: d.postes,
+    return { etab: maj1(d.etab), type: sans(d.etab).includes(sans(d.type)) ? '' : d.type,   // « Lycée de Nkol » + Lycée : pas de « (Lycée) » en double
+      parcs: d.parcs, postes: d.postes,
       lieu: [maj1(d.quartier), maj1(d.repere)].filter(Boolean).join(', ') + ' — ' + (d.ville || 'Yaoundé'), position: d.position,
       qui: [d.civilite, (d.nom || '').trim().toUpperCase(), mots(d.prenom)].filter(Boolean).join(' '), fonction: /^M(me|lle)$/.test(d.civilite) ? (FEM[d.fonction] || d.fonction) : d.fonction,
       tel: telFmt(d.tel), email: (d.email || '').trim().toLowerCase(), moment: (d.moment || '').toLowerCase(), soucis: d.problemes,
